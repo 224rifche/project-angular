@@ -1,0 +1,149 @@
+@layer components {
+  :host {
+    display: block;
+  }
+
+  .hero {
+    min-height: calc(100vh - 3.25rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 6vw, 4rem);
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.08), rgba(58, 12, 163, 0.08));
+  }
+
+  .hero__content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .intro h1 {
+    font-size: clamp(2.5rem, 6vw, 3.75rem);
+    margin: 0.25rem 0;
+  }
+
+  .intro h2 {
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    color: #6c63ff;
+    margin-bottom: 1.5rem;
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    color: #6c63ff;
+  }
+
+  .cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .availability-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(108, 99, 255, 0.1);
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: rgba(46, 196, 182, 0.1);
+    color: #2ec4b6;
+    font-weight: 600;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .stat {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 16px;
+    text-align: center;
+    border: 1px solid rgba(108, 99, 255, 0.1);
+  }
+
+  .number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #6c63ff;
+    display: block;
+  }
+
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: clamp(2rem, 6vw, 4rem);
+  }
+
+  .highlight-card {
+    border-radius: 20px;
+    padding: 2rem;
+    background: #fff;
+    border: 1px solid rgba(108, 99, 255, 0.1);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+  }
+
+  .highlight-card ul {
+    margin: 1rem 0 0;
+    padding-left: 1.25rem;
+    color: #4a4a4a;
+  }
+
+  .animate {
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  .delay {
+    animation-delay: 0.15s;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      text-align: center;
+    }
+
+    .cta-group {
+      justify-content: center;
+    }
+
+    .availability-card {
+      text-align: left;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+<app-navbar></app-navbar>
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-hero">
+    <h2>{{ footerHero.name }}</h2>
+    <p>{{ footerHero.title }}</p>
+  </div>
+
+  <nav class="footer-nav">
+    <a *ngFor="let link of footerNav" [routerLink]="link.path">{{ link.label }}</a>
+  </nav>
+
+  <p class="footer-copy">{{ footerHero.copyright }}</p>
+</footer>

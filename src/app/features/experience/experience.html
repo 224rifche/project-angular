@@ -1,0 +1,29 @@
+<section class="experience">
+  <header class="experience__header">
+    <p class="eyebrow">Expérience</p>
+    <h1>Mon parcours professionnel</h1>
+    <p>Un mix entre missions terrain, enseignement et accompagnement d’équipes tech.</p>
+  </header>
+
+  <div class="experience__highlights">
+    <article class="highlight" *ngFor="let item of highlights">
+      <span class="value">{{ item.value }}</span>
+      <span class="label">{{ item.label }}</span>
+    </article>
+  </div>
+
+  <div class="experience__timeline">
+    <article class="timeline-card" *ngFor="let role of roles">
+      <div class="timeline-card__head">
+        <span class="period">{{ role.period }}</span>
+        <span class="badge" *ngIf="role.badge">{{ role.badge }}</span>
+      </div>
+      <h2>{{ role.title }}</h2>
+      <p class="company">{{ role.company }}</p>
+      <p class="location">{{ role.location }}</p>
+      <ul>
+        <li *ngFor="let bullet of role.bullets">{{ bullet }}</li>
+      </ul>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,27 @@
+<section class="skills">
+  <header class="skills__header">
+    <p class="eyebrow">Compétences</p>
+    <h1>Stack & expertise</h1>
+    <p>Un mix équilibré entre conception d’interfaces, architecture back-end et accompagnement des équipes.</p>
+  </header>
+
+  <div class="skills__grid">
+    <article class="skills-card" *ngFor="let category of categories">
+      <div class="skills-card__head">
+        <h2>{{ category.title }}</h2>
+        <p>{{ category.description }}</p>
+      </div>
+      <ul class="skills-list">
+        <li *ngFor="let skill of category.skills">
+          <div class="skills-list__row">
+            <span>{{ skill.label }}</span>
+            <span>{{ skill.level }}%</span>
+          </div>
+          <div class="progress">
+            <div class="progress__bar" [style.width.%]="skill.level"></div>
+          </div>
+        </li>
+      </ul>
+    </article>
+  </div>
+</section>

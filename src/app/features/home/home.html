@@ -1,0 +1,44 @@
+
+<section class="hero">
+  <div class="hero__content">
+    <div class="intro animate">
+      <p class="eyebrow">{{ hero.greeting }}</p>
+      <h1>{{ hero.name }}</h1>
+      <h2>{{ hero.title }}</h2>
+      <p>{{ hero.description }}</p>
+      <div class="cta-group">
+        <a class="button is-primary" [href]="hero.primaryCta.href" download>
+          {{ hero.primaryCta.label }}
+        </a>
+        <a class="button is-light" [routerLink]="hero.secondaryCta.link">
+          {{ hero.secondaryCta.label }}
+        </a>
+      </div>
+    </div>
+
+    <div class="availability-card animate delay">
+      <h3>{{ availability.headline }}</h3>
+      <p>{{ availability.message }}</p>
+      <div class="status">
+        <span class="dot"></span>
+        {{ availability.status }}
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat" *ngFor="let stat of stats">
+      <span class="number">{{ stat.value }}</span>
+      <p>{{ stat.label }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="highlights">
+  <article class="highlight-card" *ngFor="let highlight of highlights">
+    <h3>{{ highlight.title }}</h3>
+    <ul>
+      <li *ngFor="let item of highlight.items">{{ item }}</li>
+    </ul>
+  </article>
+</section>

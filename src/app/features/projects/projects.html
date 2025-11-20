@@ -1,0 +1,33 @@
+<section class="projects">
+  <header class="projects__header">
+    <p class="eyebrow">Mes Projets</p>
+    <h1>Des solutions pour des enjeux concrets</h1>
+    <p>Applications métiers, plateformes de formation, outils internes… chaque projet raconte une histoire.</p>
+  </header>
+
+  <div class="projects__filters">
+    <button
+      *ngFor="let filter of filters"
+      type="button"
+      [class.active]="filter === activeFilter()"
+      (click)="setFilter(filter)"
+    >
+      {{ filter }}
+    </button>
+  </div>
+
+  <div class="projects__grid">
+    <article class="project-card" *ngFor="let project of filteredProjects">
+      <div class="project-card__body">
+        <h2>{{ project.title }}</h2>
+        <p>{{ project.description }}</p>
+        <div class="project-stack">
+          <span *ngFor="let tech of project.stack">{{ tech }}</span>
+        </div>
+      </div>
+      <div class="project-card__footer">
+        <a class="case-study" href="#">Voir le case study</a>
+      </div>
+    </article>
+  </div>
+</section>

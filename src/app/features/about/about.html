@@ -1,0 +1,34 @@
+<section class="about">
+  <div class="about__intro">
+    <p class="eyebrow">À propos</p>
+    <h1>{{ intro.title }}</h1>
+    <p class="description">{{ intro.description }}</p>
+    <blockquote>{{ intro.quote }}</blockquote>
+  </div>
+
+  <div class="about__stats">
+    <article class="stat-card" *ngFor="let item of highlights">
+      <span class="value">{{ item.value }}</span>
+      <span class="label">{{ item.label }}</span>
+    </article>
+  </div>
+
+  <div class="about__skills">
+    <h2>Ce que j'apporte</h2>
+    <ul>
+      <li *ngFor="let skill of skills">{{ skill }}</li>
+    </ul>
+  </div>
+
+  <div class="about__timeline">
+    <h2>Mon parcours</h2>
+    <div class="timeline">
+      <article class="timeline-item" *ngFor="let step of journey">
+        <span class="timeline-year">{{ step.year }}</span>
+        <h3>{{ step.title }}</h3>
+        <p class="company">{{ step.company }}</p>
+        <p class="timeline-desc">{{ step.description }}</p>
+      </article>
+    </div>
+  </div>
+</section>

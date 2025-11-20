@@ -1,0 +1,82 @@
+/* Import de Bulma et Font Awesome */
+@import '~bulma/css/bulma.min.css';
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+
+/* Variables CSS */
+:root {
+  --primary: #4361ee;
+  --primary-hover: #3a56d4;
+  --text: #333;
+  --light: #f8f9fa;
+  --dark: #343a40;
+}
+
+/* Styles de base */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  line-height: 1.6;
+  padding-top: 3.25rem;
+}
+
+/* Sections */
+section {
+  padding: 4rem 1.5rem;
+}
+
+/* Titres de section */
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+/* Cartes */
+.card {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* Boutons */
+.button.is-primary {
+  background-color: var(--primary);
+}
+
+.button.is-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Hero section */
+.hero {
+  min-height: calc(100vh - 3.25rem);
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  color: white;
+}
+
+/* Pied de page */
+.footer {
+  background-color: var(--dark);
+  color: white;
+  padding: 2rem 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  section {
+    padding: 2rem 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+}

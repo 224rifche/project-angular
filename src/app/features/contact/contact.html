@@ -1,0 +1,71 @@
+<section class="contact">
+  <header class="contact__header">
+    <p class="eyebrow">Contactez-moi</p>
+    <h1>Construisons votre prochain projet</h1>
+    <p>Répondez-moi sur les canaux ci-dessous ou envoyez un message directement.</p>
+  </header>
+
+  <div class="contact__layout">
+    <aside class="contact-card">
+      <div class="contact-card__details">
+        <h2>Coordonnées</h2>
+        <ul>
+          <li *ngFor="let detail of details">
+            <i class="fas" [class]="detail.icon"></i>
+            <div>
+              <span class="label">{{ detail.label }}</span>
+              <span class="value">{{ detail.value }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="contact-card__languages">
+        <h3>Langues</h3>
+        <span *ngFor="let language of languages">{{ language }}</span>
+      </div>
+
+      <div class="contact-card__stats">
+        <article *ngFor="let stat of stats">
+          <span class="value">{{ stat.value }}</span>
+          <span class="label">{{ stat.label }}</span>
+          <small>{{ stat.note }}</small>
+        </article>
+      </div>
+
+      <div class="contact-card__social">
+        <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" rel="noopener">
+          <i [class]="social.icon"></i>
+          <span>{{ social.label }}</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="contact__form">
+      <div class="alert" *ngIf="isSubmitted()">
+        <span>Merci ! Votre message a été envoyé.</span>
+        <button type="button" (click)="closeAlert()">×</button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="field">
+          <label>Nom complet</label>
+          <input type="text" formControlName="fullName" [class.invalid]="form.get('fullName')?.invalid && form.get('fullName')?.touched">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" formControlName="email" [class.invalid]="form.get('email')?.invalid && form.get('email')?.touched">
+        </div>
+        <div class="field">
+          <label>Sujet</label>
+          <input type="text" formControlName="subject" [class.invalid]="form.get('subject')?.invalid && form.get('subject')?.touched">
+        </div>
+        <div class="field">
+          <label>Message</label>
+          <textarea rows="5" formControlName="message" [class.invalid]="form.get('message')?.invalid && form.get('message')?.touched"></textarea>
+        </div>
+        <button type="submit">Envoyer l'email</button>
+      </form>
+    </div>
+  </div>
+</section>

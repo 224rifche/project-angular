@@ -1,0 +1,32 @@
+<header class="navbar" aria-label="Navigation principale">
+  <div class="navbar__inner">
+    <a class="brand" routerLink="/" (click)="closeMenu()">
+      <span class="brand__logo">BCD</span>
+      <div class="brand__text">
+        <span class="brand__title">Boubacar Diallo</span>
+        <span class="brand__subtitle">Développeur Full-Stack</span>
+      </div>
+    </a>
+
+    <button class="burger" type="button" aria-label="Menu" [class.open]="isMenuOpen" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="nav" [class.open]="isMenuOpen">
+      <a
+        *ngFor="let link of navLinks"
+        routerLink="{{ link.path }}"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: !!link.exact }"
+        (click)="closeMenu()"
+      >
+        {{ link.label }}
+      </a>
+      <a class="primary" routerLink="/contact" (click)="closeMenu()">
+        Me contacter
+      </a>
+    </nav>
+  </div>
+</header>
