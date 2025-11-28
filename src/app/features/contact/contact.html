@@ -1,43 +1,70 @@
 <section class="contact">
   <header class="contact__header">
     <p class="eyebrow">Contactez-moi</p>
-    <h1>Construisons votre prochain projet</h1>
-    <p>Répondez-moi sur les canaux ci-dessous ou envoyez un message directement.</p>
+    <h1>Travaillons ensemble</h1>
+    <p>Je suis toujours ouvert à de nouvelles opportunités. N'hésitez pas à me contacter pour discuter de votre projet ou simplement pour échanger.</p>
   </header>
+
+  <!-- Messages d'alerte -->
+  <div class="alert alert-success" *ngIf="showSuccess()">
+    <i class="fas fa-check-circle"></i>
+    <span>Votre message a été envoyé avec succès ! Je vous répondrai dès que possible.</span>
+    <button type="button" (click)="showSuccess.set(false)" class="close-btn">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="alert alert-error" *ngIf="showError()">
+    <i class="fas fa-exclamation-circle"></i>
+    <span>Une erreur est survenue lors de l'envoi du message. Veuillez réessayer plus tard.</span>
+    <button type="button" (click)="showError.set(false)" class="close-btn">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
 
   <div class="contact__layout">
     <aside class="contact-card">
       <div class="contact-card__details">
         <h2>Coordonnées</h2>
         <ul>
-          <li *ngFor="let detail of details">
-            <i class="fas" [class]="detail.icon"></i>
-            <div>
-              <span class="label">{{ detail.label }}</span>
-              <span class="value">{{ detail.value }}</span>
-            </div>
+          <li *ngFor="let detail of details; let i = index" 
+              (mouseenter)="onHover(i)" 
+              (mouseleave)="onHover(null)"
+              [class.highlighted]="isHovered() === i">
+            <a [href]="detail.link" target="_blank" rel="noopener noreferrer" class="contact-link">
+              <i class="fas" [class]="detail.icon"></i>
+              <div>
+                <span class="label">{{ detail.label }}</span>
+                <span class="value">{{ detail.value }}</span>
+              </div>
+            </a>
           </li>
         </ul>
       </div>
 
       <div class="contact-card__languages">
         <h3>Langues</h3>
-        <span *ngFor="let language of languages">{{ language }}</span>
-      </div>
-
-      <div class="contact-card__stats">
-        <article *ngFor="let stat of stats">
-          <span class="value">{{ stat.value }}</span>
-          <span class="label">{{ stat.label }}</span>
-          <small>{{ stat.note }}</small>
-        </article>
+        <div class="languages-container">
+          <span *ngFor="let language of languages">{{ language }}</span>
+        </div>
       </div>
 
       <div class="contact-card__social">
-        <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" rel="noopener">
-          <i [class]="social.icon"></i>
-          <span>{{ social.label }}</span>
-        </a>
+        <h3>Réseaux sociaux</h3>
+        <div class="social-links">
+          <a *ngFor="let social of socialLinks" 
+             [href]="social.url" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             class="social-link"
+             [style.--social-color]="social.color">
+            <i [class]="social.icon"></i>
+            <div class="social-text">
+              <span class="social-label">{{ social.label }}</span>
+              <span class="social-username">{{ social.text }}</span>
+            </div>
+          </a>
+        </div>
       </div>
     </aside>
 
@@ -47,24 +74,73 @@
         <button type="button" (click)="closeAlert()">×</button>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <div class="field">
-          <label>Nom complet</label>
-          <input type="text" formControlName="fullName" [class.invalid]="form.get('fullName')?.invalid && form.get('fullName')?.touched">
+      <form [formGroup]="form" (ngSubmit)="submit()" class="contact-form">
+        <div class="form-group">
+          <label for="fullName">Nom complet</label>
+          <input 
+            type="text" 
+            id="fullName" 
+            formControlName="fullName"
+            placeholder="Votre nom"
+            [class.error]="form.get('fullName')?.invalid && form.get('fullName')?.touched">
+          <div class="error-message" *ngIf="form.get('fullName')?.errors?.['required'] && form.get('fullName')?.touched">
+            Le nom est requis
+          </div>
         </div>
-        <div class="field">
-          <label>Email</label>
-          <input type="email" formControlName="email" [class.invalid]="form.get('email')?.invalid && form.get('email')?.touched">
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            placeholder="votre@email.com"
+            [class.error]="form.get('email')?.invalid && form.get('email')?.touched">
+          <div class="error-message" *ngIf="form.get('email')?.errors?.['required'] && form.get('email')?.touched">
+            L'email est requis
+          </div>
+          <div class="error-message" *ngIf="form.get('email')?.errors?.['email'] && form.get('email')?.touched">
+            Veuillez entrer un email valide
+          </div>
         </div>
-        <div class="field">
-          <label>Sujet</label>
-          <input type="text" formControlName="subject" [class.invalid]="form.get('subject')?.invalid && form.get('subject')?.touched">
+
+        <div class="form-group">
+          <label for="subject">Sujet</label>
+          <input 
+            type="text" 
+            id="subject" 
+            formControlName="subject"
+            placeholder="Sujet de votre message"
+            [class.error]="form.get('subject')?.invalid && form.get('subject')?.touched">
+          <div class="error-message" *ngIf="form.get('subject')?.errors?.['required'] && form.get('subject')?.touched">
+            Le sujet est requis
+          </div>
         </div>
-        <div class="field">
-          <label>Message</label>
-          <textarea rows="5" formControlName="message" [class.invalid]="form.get('message')?.invalid && form.get('message')?.touched"></textarea>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea 
+            id="message" 
+            formControlName="message"
+            rows="5"
+            placeholder="Votre message..."
+            [class.error]="form.get('message')?.invalid && form.get('message')?.touched"></textarea>
+          <div class="error-message" *ngIf="form.get('message')?.errors?.['required'] && form.get('message')?.touched">
+            Le message est requis
+          </div>
+          <div class="error-message" *ngIf="form.get('message')?.errors?.['minlength'] && form.get('message')?.touched">
+            Le message doit contenir au moins 10 caractères
+          </div>
         </div>
-        <button type="submit">Envoyer l'email</button>
+
+        <button 
+          type="submit" 
+          class="submit-btn"
+          [disabled]="form.invalid || isSubmitted()"
+          [class.loading]="isSubmitted()">
+          <span *ngIf="!isSubmitted()">Envoyer le message</span>
+          <span *ngIf="isSubmitted()">Envoi en cours...</span>
+        </button>
       </form>
     </div>
   </div>

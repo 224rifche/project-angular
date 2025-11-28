@@ -27,7 +27,7 @@
   </div>
 
   <div class="stats">
-    <div class="stat" *ngFor="let stat of stats">
+    <div class="stat" *ngFor="let stat of stats; trackBy: trackByIndex">
       <span class="number">{{ stat.value }}</span>
       <p>{{ stat.label }}</p>
     </div>
@@ -35,10 +35,10 @@
 </section>
 
 <section class="highlights">
-  <article class="highlight-card" *ngFor="let highlight of highlights">
+  <article class="highlight-card" *ngFor="let highlight of highlights; trackBy: trackByIndex">
     <h3>{{ highlight.title }}</h3>
     <ul>
-      <li *ngFor="let item of highlight.items">{{ item }}</li>
+      <li *ngFor="let item of highlight.items; trackBy: trackByIndex">{{ item }}</li>
     </ul>
   </article>
 </section>

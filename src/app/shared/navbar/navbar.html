@@ -1,32 +1,34 @@
-<header class="navbar" aria-label="Navigation principale">
-  <div class="navbar__inner">
-    <a class="brand" routerLink="/" (click)="closeMenu()">
-      <span class="brand__logo">BCD</span>
-      <div class="brand__text">
-        <span class="brand__title">Boubacar Diallo</span>
-        <span class="brand__subtitle">Développeur Full-Stack</span>
-      </div>
+<nav class="navbar">
+  <a class="brand" routerLink="/">BOUBACAR CHERIF DIALLO</a>
+  
+  <!-- Bouton du menu mobile -->
+  <button class="menu-btn" (click)="toggleMenu()" aria-label="Menu">
+    <span class="menu-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+  </button>
+
+  <!-- Navigation -->
+  <div class="nav-links" [class.active]="isMenuOpen">
+    <a routerLink="/about" routerLinkActive="router-link-active" (click)="closeMenu()">
+      <i class="fas fa-user-circle"></i> À propos
     </a>
-
-    <button class="burger" type="button" aria-label="Menu" [class.open]="isMenuOpen" (click)="toggleMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-    <nav class="nav" [class.open]="isMenuOpen">
-      <a
-        *ngFor="let link of navLinks"
-        routerLink="{{ link.path }}"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: !!link.exact }"
-        (click)="closeMenu()"
-      >
-        {{ link.label }}
-      </a>
-      <a class="primary" routerLink="/contact" (click)="closeMenu()">
-        Me contacter
-      </a>
-    </nav>
+    <a routerLink="/projects" routerLinkActive="router-link-active" (click)="closeMenu()">
+      <i class="fas fa-folder-open"></i> Projets
+    </a>
+    <a routerLink="/skills" routerLinkActive="router-link-active" (click)="closeMenu()">
+      <i class="fas fa-code"></i> Compétences
+    </a>
+    <a routerLink="/experience" routerLinkActive="router-link-active" (click)="closeMenu()">
+      <i class="fas fa-briefcase"></i> Expérience
+    </a>
+    <a routerLink="/contact" routerLinkActive="router-link-active" (click)="closeMenu()">
+      <i class="fas fa-envelope"></i> Contact
+    </a>
+    <a routerLink="/github" routerLinkActive="router-link-active" (click)="closeMenu()">
+      <i class="fab fa-github"></i> GitHub
+    </a>
   </div>
-</header>
+</nav>

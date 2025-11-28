@@ -1,0 +1,49 @@
+<footer class="footer">
+  <div class="footer-content">
+    <!-- À propos -->
+    <div class="footer-section">
+      <h3>À propos</h3>
+      <p>Développeur Full Stack passionné par la création d'expériences web modernes et performantes. Basé à Conakry, Guinée.</p>
+      <div class="social-links">
+        <a *ngFor="let social of socialLinks" 
+           [href]="social.url" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           [title]="social.label">
+          <i [class]="social.icon"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Liens rapides -->
+    <div class="footer-section">
+      <h3>Liens rapides</h3>
+      <ul class="footer-links">
+        <li *ngFor="let link of quickLinks">
+          <a [routerLink]="link.route">
+            <i [class]="link.icon"></i>
+            {{ link.label }}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div class="footer-section">
+      <h3>Contact</h3>
+      <ul class="footer-links">
+        <li *ngFor="let info of contactInfo">
+          <a href="#">
+            <i [class]="info.icon"></i>
+            {{ info.text }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-bottom">
+    <p>&copy; {{ currentYear }} BOUBACAR CHERIF DIALLO. Tous droits réservés.</p>
+  </div>
+</footer>

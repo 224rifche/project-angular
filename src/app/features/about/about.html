@@ -14,10 +14,18 @@
   </div>
 
   <div class="about__skills">
-    <h2>Ce que j'apporte</h2>
-    <ul>
-      <li *ngFor="let skill of skills">{{ skill }}</li>
-    </ul>
+    <h2>Mes compétences techniques</h2>
+    <div class="skill-categories">
+      <div *ngFor="let category of skillCategories; trackBy: trackByIndex" class="skill-category">
+        <h3>{{ category.name }}</h3>
+        <ul>
+          <li *ngFor="let skill of category.skills; trackBy: trackBySkill">
+            <i [class]="skill | skillIcon"></i>
+            {{ skill }}
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <div class="about__timeline">

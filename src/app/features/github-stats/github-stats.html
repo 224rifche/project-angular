@@ -1,1 +1,169 @@
-<p>github-stats works!</p>
+<section class="github-stats">
+  <div class="container">
+    <div class="section-header">
+      <h2><i class="fab fa-github"></i> Mes Statistiques GitHub</h2>
+      <div class="divider"></div>
+    </div>
+    
+    <!-- État de chargement -->
+    <div *ngIf="isLoading" class="state-container loading">
+      <div class="spinner">
+        <i class="fas fa-circle-notch fa-spin"></i>
+      </div>
+      <p>Chargement de vos statistiques GitHub...</p>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="hasError && error" class="state-container error">
+      <div class="error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <p class="error-message">{{ error }}</p>
+      <button (click)="loadGithubStats('224rifche')" class="btn btn-primary">
+        <i class="fas fa-sync-alt"></i> Réessayer
+      </button>
+    </div>
+
+    <!-- Contenu principal -->
+    <div *ngIf="!isLoading && !hasError && user" class="stats-container fade-in">
+      <!-- Carte de profil -->
+      <div class="profile-card card">
+        <div class="profile-header">
+          <div class="avatar-container">
+            <img [src]="user.avatar_url" [alt]="user.name || 'Profil GitHub'" class="avatar">
+            <div class="online-status"></div>
+          </div>
+          <div class="profile-info">
+            <h1 class="profile-name">{{ user.name || user.login }}</h1>
+            <p class="profile-username"><i class="fas fa-at"></i> {{ user.login }}</p>
+            <p *ngIf="user.bio" class="profile-bio">
+              <i class="fas fa-quote-left"></i> {{ user.bio }} <i class="fas fa-quote-right"></i>
+            </p>
+            <div class="profile-actions">
+              <a [href]="user.html_url" target="_blank" class="btn btn-primary">
+                <i class="fab fa-github"></i> Voir le profil
+              </a>
+              <a [href]="'https://github.com/' + user.login + '?tab=repositories'" target="_blank" class="btn btn-outline">
+                <i class="fas fa-code-branch"></i> Voir les dépôts
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="stats-grid">
+          <!-- Carte Dépôts publics -->
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);">
+              <i class="fas fa-code-branch"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ user.public_repos || 0 }}</div>
+              <div class="stat-text">Dépôts publics</div>
+              <div class="stat-label">Sur GitHub</div>
+            </div>
+          </div>
+
+          <!-- Carte Étoiles -->
+          <div class="stat-card highlight">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ totalStars || 0 }}</div>
+              <div class="stat-text">Étoiles</div>
+              <div class="stat-label">Total des étoiles</div>
+            </div>
+          </div>
+
+          <!-- Carte Forks -->
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">
+              <i class="fas fa-code-merge"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ totalForks || 0 }}</div>
+              <div class="stat-text">Forks</div>
+              <div class="stat-label">Total des forks</div>
+            </div>
+          </div>
+
+          <!-- Carte Abonnés -->
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #ec4899, #f472b6);">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ user.followers || 0 }}</div>
+              <div class="stat-text">Abonnés</div>
+              <div class="stat-label">Qui vous suivent</div>
+            </div>
+          </div>
+
+          <!-- Carte Abonnements -->
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ user.following || 0 }}</div>
+              <div class="stat-text">Abonnements</div>
+              <div class="stat-label">Personnes suivies</div>
+            </div>
+          </div>
+
+          <!-- Carte Membre depuis -->
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">
+              <i class="far fa-calendar-alt"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ user.created_at | date:'yyyy' }}</div>
+              <div class="stat-text">Membre depuis</div>
+              <div class="stat-label">{{ user.created_at | date:'MMMM yyyy' }}</div>
+              <span class="stat-label">{{ user.created_at | date:'MMMM yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Langages les plus utilisés -->
+      <div class="languages-card">
+        <h3>Langages les plus utilisés</h3>
+        <div class="languages-list">
+          <div *ngFor="let lang of getTopLanguages()" class="language-item">
+            <span class="language-name">{{ lang.name }}</span>
+            <div class="language-bar">
+              <div class="language-bar-fill" [style.width.%]="(lang.count / getTopLanguages()[0].count) * 100"></div>
+            </div>
+            <span class="language-count">{{ lang.count }} repos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dépôts récents -->
+      <div class="repos-card">
+        <h3>Dépôts récents</h3>
+        <div class="repos-grid">
+          <div *ngFor="let repo of repos" class="repo-card">
+            <div class="repo-header">
+              <a [href]="repo.html_url" target="_blank" class="repo-name">{{ repo.name }}</a>
+              <div class="repo-stats">
+                <span class="repo-stat"><i class="fas fa-star"></i> {{ repo.stargazers_count }}</span>
+                <span class="repo-stat"><i class="fas fa-code-branch"></i> {{ repo.forks_count }}</span>
+              </div>
+            </div>
+            <p *ngIf="repo.description" class="repo-description">{{ repo.description }}</p>
+            <div *ngIf="repo.language" class="repo-language">
+              <span class="language-dot"></span>
+              {{ repo.language }}
+            </div>
+            <div class="repo-updated">
+              Mis à jour le {{ repo.updated_at | date: 'dd/MM/yyyy' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

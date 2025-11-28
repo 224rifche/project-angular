@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -7,9 +7,14 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrls: ['./home.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Home {
+  // Méthode pour suivre les éléments dans les boucles *ngFor
+  trackByIndex(index: number): number {
+    return index;
+  }
   hero = {
     greeting: "Bonjour, moi c'est",
     name: 'Boubacar Cherif Diallo',
