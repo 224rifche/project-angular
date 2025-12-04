@@ -1,0 +1,59 @@
+name: Deploy Angular Portfolio
+
+# 🔹 Déclenche le workflow à chaque push sur la branche main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1️⃣ Récupère le code source du repo
+      - uses: actions/checkout@v3
+
+      # 2️⃣ Installe Node.js (version 20)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # 3️⃣ Installe les dépendances Angular
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install -g @angular/cli
+
+      # 4️⃣ Linting Angular (optionnel)
+      - name: Run Linter
+        run: npm run lint || true
+        # ⚠️ Le workflow ne bloquera pas si le linter échoue
+
+      # 5️⃣ Formattage Prettier (TS/HTML/CSS)
+      - name: Prettier formatting
+        run: npx prettier --write "src/**/*.{ts,html,css,scss}"
+
+      # 6️⃣ Build Angular pour la production
+      - name: Build Angular project
+        run: ng build --configuration production --base-href "/project-angular/"
+
+      # 7️⃣ Audit Lighthouse (optionnel)
+      - name: Run Lighthouse CI
+        run: npx lhci autorun || true
+        # ⚠️ Ne bloque pas le déploiement si le score est faible
+
+      # 8️⃣ Upload rapport Lighthouse
+      - name: Upload Lighthouse Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/reports/*
+
+      # 9️⃣ Déploiement sur GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/project-angular
+          # 🔹 Angular build génère un dossier dans dist/<nom-du-projet>
