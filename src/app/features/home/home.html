@@ -1,44 +1,63 @@
-
-<section class="hero">
-  <div class="hero__content">
-    <div class="intro animate">
-      <p class="eyebrow">{{ hero.greeting }}</p>
-      <h1>{{ hero.name }}</h1>
-      <h2>{{ hero.title }}</h2>
-      <p>{{ hero.description }}</p>
-      <div class="cta-group">
-        <a class="button is-primary" [href]="hero.primaryCta.href" download>
-          {{ hero.primaryCta.label }}
-        </a>
-        <a class="button is-light" [routerLink]="hero.secondaryCta.link">
-          {{ hero.secondaryCta.label }}
-        </a>
+﻿<div class="home-container">
+  <!-- Section Hero avec arrière-plan en image -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">{{ hero.greeting }} <span class="highlight">{{ hero.name }}</span></h1>
+        <h2 class="hero-subtitle">{{ hero.title }}</h2>
+        <p class="hero-description">{{ hero.description }}</p>
+        <div class="hero-buttons">
+          <a [routerLink]="hero.primaryCta.link" class="btn btn-primary">
+            {{ hero.primaryCta.label }}
+          </a>
+          <a [routerLink]="hero.secondaryCta.link" class="btn btn-outline">
+            {{ hero.secondaryCta.label }}
+          </a>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="availability-card animate delay">
-      <h3>{{ availability.headline }}</h3>
-      <p>{{ availability.message }}</p>
-      <div class="status">
-        <span class="dot"></span>
-        {{ availability.status }}
+  <!-- Section Services -->
+  <section class="services-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Mes Services</h2>
+        <div class="divider"></div>
+        <p class="section-subtitle">Découvrez comment je peux vous aider à concrétiser vos projets</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card" *ngFor="let service of services; let i = index; trackBy: trackByIndex" [style.--delay]="i * 0.1 + 's'">
+          <div class="service-icon">
+            <i [class]="service.icon"></i>
+          </div>
+          <div class="service-content">
+            <h3 class="service-title">{{ service.title }}</h3>
+            <p class="service-description">{{ service.description }}</p>
+            <a href="#" class="service-link">En savoir plus <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <div class="service-hover-bg"></div>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="stats">
-    <div class="stat" *ngFor="let stat of stats; trackBy: trackByIndex">
-      <span class="number">{{ stat.value }}</span>
-      <p>{{ stat.label }}</p>
+  <!-- Section Contact -->
+  <section class="contact-cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Prêt à démarrer votre projet ?</h2>
+        <p>Discutons de la façon dont je peux vous aider à concrétiser vos idées.</p>
+        <div class="cta-buttons">
+          <a routerLink="/contact" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Me contacter
+          </a>
+          <a (click)="downloadCV()" class="btn btn-outline" style="cursor: pointer;">
+            <i class="fas fa-download"></i> Télécharger mon CV
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
-
-<section class="highlights">
-  <article class="highlight-card" *ngFor="let highlight of highlights; trackBy: trackByIndex">
-    <h3>{{ highlight.title }}</h3>
-    <ul>
-      <li *ngFor="let item of highlight.items; trackBy: trackByIndex">{{ item }}</li>
-    </ul>
-  </article>
-</section>
+  </section>
+</div>

@@ -43,18 +43,42 @@
   margin-bottom: 0.25rem;
 }
 
-.skills-card__head p {
-  color: #555;
-  margin: 0 0 1rem;
+.skills__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0 3rem;
+  padding: 0 1rem;
 }
 
-.skills-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.skills__filters button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.skills__filters button:hover {
+  background: #f8fafc;
+  transform: translateY(-2px);
+}
+
+.skills__filters button.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.skills__filters button i {
+  font-size: 1rem;
 }
 
 .skills-list__row {

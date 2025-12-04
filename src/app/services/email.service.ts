@@ -5,9 +5,9 @@ import emailjs from '@emailjs/browser';
   providedIn: 'root'
 })
 export class EmailService {
-  private serviceID = 'votre_service_id';
-  private templateID = 'votre_template_id';
-  private userID = 'votre_user_id';
+  private serviceID = 'service_3efcgi5';
+  private templateID = 'template_qidhsln';
+  private userID = 'ogSUIiLR5jDIxWBx0';
 
   constructor() {
     emailjs.init(this.userID);

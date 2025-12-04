@@ -1,12 +1,20 @@
-import { Component, signal } from '@angular/core';
+// projects/projects.ts
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
+import { GithubService } from '../../services/github.service';
 
 interface Project {
-  title: string;
+  id: number;
+  name: string;
   description: string;
-  stack: string[];
-  category: string;
-  caseStudyUrl?: string;
+  html_url: string;
+  homepage: string;
+  language: string;
+  topics: string[];
+  created_at: string;
+  updated_at: string;
+  featured?: boolean;
 }
 
 @Component({
@@ -14,75 +22,117 @@ interface Project {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './projects.html',
-  styleUrl: './projects.css',
+  styleUrls: ['./projects.css']
 })
-export class Projects {
-  readonly filters = ['Tous les projets', 'Angular', 'React', 'Django', 'Laravel', 'TypeScript', 'JavaScript'];
-  readonly activeFilter = signal('Tous les projets');
+export class Projects implements OnInit {
+  private githubService = inject(GithubService);
+  private readonly GITHUB_USERNAME = '224rifche';
 
-  readonly projects: Project[] = [
-    {
-      title: 'Système de Gestion de Flotte',
-      description: "Application de gestion de flotte de transport durant le stage chez AltGras.",
-      stack: ['Angular', 'TypeScript', 'Django REST', 'TailwindCSS'],
-      category: 'Angular',
-    },
-    {
-      title: 'SOFAMER - Gestion de production',
-      description: 'Suivi de la fabrication multi-emballage et recyclage.',
-      stack: ['Angular', 'TypeScript', 'Bootstrap', 'Angular Material'],
-      category: 'Angular',
-    },
-    {
-      title: 'CIGO - Gestion de chantiers',
-      description: "Piloter les grands chantiers d’une entreprise de construction.",
-      stack: ['Laravel', 'Livewire', 'TailwindCSS'],
-      category: 'Laravel',
-    },
-    {
-      title: 'KALSADORT - Gestion de transport',
-      description: 'Système pour société de transport moderne.',
-      stack: ['Laravel', 'Livewire', 'TailwindCSS'],
-      category: 'Laravel',
-    },
-    {
-      title: 'AREKA - Vente & Transport',
-      description: 'Plateforme de gestion de la vente d’huile et du transport.',
-      stack: ['Laravel', 'Livewire', 'TailwindCSS'],
-      category: 'Laravel',
-    },
-    {
-      title: 'Gestion de Restaurant',
-      description: 'Commandes, réservations et reporting pour restaurants.',
-      stack: ['Django', 'TailwindCSS'],
-      category: 'Django',
-    },
-    {
-      title: 'Gestion École',
-      description: 'Administration complète et suivi des étudiants.',
-      stack: ['React', 'TypeScript', 'Laravel'],
-      category: 'React',
-    },
-    {
-      title: 'GKI - Gestion interne',
-      description: 'Outil interne pour le groupe Kallan International.',
-      stack: ['Laravel', 'Livewire', 'TailwindCSS'],
-      category: 'Laravel',
-    },
+  // Filtres disponibles
+  readonly filters = ['Tous', 'Angular', 'JavaScript', 'TypeScript', 'HTML', 'CSS'];
+  readonly activeFilter = signal('Tous');
+
+  projects = signal<Project[]>([]);
+  loading = signal(true);
+  error = signal('');
+
+  // Projets à mettre en avant
+  private readonly FEATURED_PROJECTS = [
+    'mon-portfolio',
+    'gestion-flotte',
+    'sofamer-app'
   ];
 
+  // Couleurs personnalisées pour les langages
+  private readonly LANGUAGE_COLORS: { [key: string]: string } = {
+    'TypeScript': '#3178c6',
+    'JavaScript': '#f1e05a',
+    'HTML': '#e34c26',
+    'CSS': '#563d7c',
+    'Angular': '#dd1b16',
+    'Node.js': '#68a063',
+    'React': '#61dafb',
+    'Vue': '#41b883'
+  };
+
+  // Projets filtrés
   get filteredProjects(): Project[] {
-    const filter = this.activeFilter();
-    if (filter === 'Tous les projets') {
-      return this.projects;
-    }
-    return this.projects.filter(project =>
-      project.category.toLowerCase() === filter.toLowerCase() ||
-      project.stack.some(tech => tech.toLowerCase().includes(filter.toLowerCase()))
+    const activeFilter = this.activeFilter();
+    const projects = this.projects();
+    
+    return projects.filter(project => 
+      activeFilter === 'Tous' || 
+      project.language === activeFilter ||
+      project.topics?.includes(activeFilter.toLowerCase())
     );
   }
 
-  setFilter(filter: string) {
+  async ngOnInit() {
+    await this.loadProjects();
+  }
+
+  async loadProjects() {
+    try {
+      this.loading.set(true);
+      this.error.set('');
+      
+      const repos = await firstValueFrom(this.githubService.getRepos(this.GITHUB_USERNAME));
+      
+      if (Array.isArray(repos)) {
+        const projects = repos.map((repo: any) => ({
+          id: repo.id,
+          name: this.formatProjectName(repo.name),
+          description: repo.description || 'Aucune description disponible',
+          html_url: repo.html_url,
+          homepage: repo.homepage || '',
+          language: repo.language || 'Autre',
+          topics: repo.topics || [],
+          created_at: repo.created_at,
+          updated_at: repo.updated_at,
+          featured: this.FEATURED_PROJECTS.includes(repo.name)
+        }));
+
+        this.projects.set(projects);
+      } else {
+        throw new Error('Les données reçues ne sont pas valides');
+      }
+    } catch (err) {
+      console.error('Erreur lors du chargement des projets:', err);
+      this.error.set(err instanceof Error ? err.message : 'Impossible de charger les projets depuis GitHub. Veuillez vérifier votre connexion ou réessayer plus tard.');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  setFilter(filter: string): void {
     this.activeFilter.set(filter);
+  }
+
+  getLanguageColor(language: string): string {
+    return this.LANGUAGE_COLORS[language] || '#6b7280';
+  }
+
+  private formatProjectName(name: string): string {
+    if (!name) return '';
+    // Convertir les tirets en espaces et mettre en majuscule la première lettre de chaque mot
+    return name
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+  getLastUpdated(dateString: string): string {
+    return this.getFormattedDate(dateString, 'Mis à jour le');
+  }
+
+  getFormattedDate(dateString: string, prefix: string = ''): string {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    };
+    const formattedDate = date.toLocaleDateString('fr-FR', options);
+    return prefix ? `${prefix} ${formattedDate}` : formattedDate;
   }
 }

@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 
 interface ExperienceItem {
   period: string;
   title: string;
   company: string;
-  location: string;
-  bullets: string[];
+  description: string;
+  tags: string[];
+  icon: string;
   badge?: string;
 }
 
@@ -16,64 +18,79 @@ interface ExperienceItem {
   imports: [CommonModule],
   templateUrl: './experience.html',
   styleUrl: './experience.css',
+  animations: [
+    trigger('fadeInUp', [
+      transition(':enter', [
+        query('.experience-card', [
+          style({ opacity: 0, transform: 'translateY(20px)' }),
+          stagger('100ms', [
+            animate('0.5s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+          ])
+        ], { optional: true })
+      ])
+    ])
+  ]
 })
-export class Experience {
-  readonly roles: ExperienceItem[] = [
+export class Experience implements OnInit {
+  activeTab: string = 'all';
+  
+  readonly experiences: ExperienceItem[] = [
     {
-      period: 'Juin 2024 - Aujourd’hui',
-      title: 'Développeur Web',
-      company: 'GKI (Groupe Kallan International S.A)',
-      location: 'Lambanyi, Guinée',
-      bullets: [
-        'Création et maintenance d’applications web',
-        'Développement frontend et backend sur des projets critiques',
-      ],
-      badge: 'Actuel',
+      period: '2023 — Aujourd\'hui',
+      title: 'Développeur Full-Stack',
+      company: 'Projets Personnels',
+      description: 'Réalisation de projets complets avec différentes technologies modernes et conception d\'API robustes.',
+      tags: ['Angular', 'Node.js', 'Django', 'TailwindCSS', 'API REST'],
+      icon: '💻',
+      badge: 'Actuel'
     },
     {
-      period: 'Oct 2024 - Juin 2025',
-      title: 'Formateur en Développement Web',
-      company: 'Université Barack Obama',
-      location: 'Conakry, Guinée',
-      bullets: [
-        'Formation des étudiants en Licence professionnelle',
-        'Cours sur Angular, Django et pratiques modernes',
-      ],
+      period: '2024 - 2025',
+      title: 'Ambassadeur',
+      company: '10000 Codeurs',
+      description: 'Promotion de l\'apprentissage du code et mentorat des nouveaux développeurs.',
+      tags: ['Mentorat', 'Formation', 'Développement Web'],
+      icon: '🌟',
+      badge: 'Futur'
     },
     {
-      period: 'Nov 2023',
-      title: 'Formation en Développement Personnel',
-      company: 'Conakry, Guinée',
-      location: 'Conakry, Guinée',
-      bullets: [
-        'Développement des soft skills pour maximiser l’impact professionnel',
-      ],
+      period: '2024',
+      title: 'Animateur Bénévole',
+      company: 'Centre numérique Orange',
+      description: 'Initiation des jeunes à la programmation et organisation d\'ateliers créatifs.',
+      tags: ['Scratch', 'Animation', 'Bénévolat'],
+      icon: '🎨'
     },
     {
-      period: 'Juin 2023 - Août 2023',
-      title: 'Stagiaire Développeur',
-      company: 'AltGras',
-      location: 'Conakry, Guinée',
-      bullets: [
-        'Participation à un projet de gestion de flotte de transport',
-        'Contribution aux phases de conception et d’implémentation',
-      ],
-    },
-    {
-      period: '2021 - 2024',
-      title: 'Enseignant en Informatique',
-      company: 'Conakry, Guinée',
-      location: 'Conakry, Guinée',
-      bullets: [
-        'Animation de cours Algorithme, Java, C/C++, HTML/CSS, JavaScript',
-        'Encadrement de projets étudiants et production de cours en ligne',
-      ],
-    },
+      period: '2022 - 2025',
+      title: 'Étudiant en informatique',
+      company: 'Formation académique',
+      description: 'Apprentissage approfondi des concepts fondamentaux en informatique et développement logiciel.',
+      tags: ['Algorithmique', 'Structures de données', 'Programmation'],
+      icon: '🎓',
+      badge: 'En cours'
+    }
   ];
 
-  readonly highlights = [
-    { label: 'Projets livrés', value: '35+' },
-    { label: 'Étudiants formés', value: '120+' },
-    { label: 'Années d’expérience', value: '5' },
-  ];
+  filteredExperiences: ExperienceItem[] = [];
+
+  ngOnInit() {
+    this.filteredExperiences = [...this.experiences];
+  }
+
+  filterExperiences(category: string) {
+    this.activeTab = category;
+    if (category === 'all') {
+      this.filteredExperiences = [...this.experiences];
+    } else {
+      this.filteredExperiences = this.experiences.filter(exp => 
+        exp.tags.some(tag => tag.toLowerCase() === category.toLowerCase())
+      );
+    }
+  }
+
+  getUniqueTags(): string[] {
+    const allTags = this.experiences.flatMap(exp => exp.tags);
+    return [...new Set(allTags)];
+  }
 }

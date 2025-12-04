@@ -1,29 +1,52 @@
-<section class="experience">
-  <header class="experience__header">
-    <p class="eyebrow">Expérience</p>
-    <h1>Mon parcours professionnel</h1>
-    <p>Un mix entre missions terrain, enseignement et accompagnement d’équipes tech.</p>
-  </header>
+<section class="experience-section" @fadeInUp>
+  <div class="container">
+    <header class="section-header">
+      <h2>Mon Expérience</h2>
+      <p class="lead">Voici un aperçu de mon parcours professionnel et des projets sur lesquels j'ai travaillé.</p>
+    </header>
 
-  <div class="experience__highlights">
-    <article class="highlight" *ngFor="let item of highlights">
-      <span class="value">{{ item.value }}</span>
-      <span class="label">{{ item.label }}</span>
-    </article>
-  </div>
+    <!-- Filtres -->
+    <div class="filters">
+      <button 
+        [class.active]="activeTab === 'all'"
+        (click)="filterExperiences('all')"
+        class="filter-btn"
+      >
+        Tous
+      </button>
+      <button 
+        *ngFor="let tag of getUniqueTags()"
+        [class.active]="activeTab === tag.toLowerCase()"
+        (click)="filterExperiences(tag.toLowerCase())"
+        class="filter-btn"
+      >
+        {{ tag }}
+      </button>
+    </div>
 
-  <div class="experience__timeline">
-    <article class="timeline-card" *ngFor="let role of roles">
-      <div class="timeline-card__head">
-        <span class="period">{{ role.period }}</span>
-        <span class="badge" *ngIf="role.badge">{{ role.badge }}</span>
-      </div>
-      <h2>{{ role.title }}</h2>
-      <p class="company">{{ role.company }}</p>
-      <p class="location">{{ role.location }}</p>
-      <ul>
-        <li *ngFor="let bullet of role.bullets">{{ bullet }}</li>
-      </ul>
-    </article>
+    <!-- Liste des expériences -->
+    <div class="experience-grid">
+      <article 
+        *ngFor="let exp of filteredExperiences" 
+        class="experience-card"
+        [class.featured]="exp.badge"
+      >
+        <div class="card-header">
+          <div class="icon">{{ exp.icon }}</div>
+          <div>
+            <span class="period">{{ exp.period }}</span>
+            <span *ngIf="exp.badge" class="badge">{{ exp.badge }}</span>
+          </div>
+        </div>
+        
+        <h3>{{ exp.title }}</h3>
+        <p class="company">{{ exp.company }}</p>
+        <p class="description">{{ exp.description }}</p>
+        
+        <div class="tags">
+          <span *ngFor="let tag of exp.tags" class="tag">{{ tag }}</span>
+        </div>
+      </article>
+    </div>
   </div>
 </section>

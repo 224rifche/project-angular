@@ -1,33 +1,140 @@
 <section class="projects">
   <header class="projects__header">
-    <p class="eyebrow">Mes Projets</p>
-    <h1>Des solutions pour des enjeux concrets</h1>
-    <p>Applications métiers, plateformes de formation, outils internes… chaque projet raconte une histoire.</p>
+    <p class="eyebrow"> Mes Projets GitHub</p>
+    <h1>Découvrez mon travail</h1>
+    <p>Explorez mes projets personnels et contributions. Chaque projet reflète mon parcours et mes compétences en développement.</p>
   </header>
 
+  <!-- Filtres -->
   <div class="projects__filters">
-    <button
-      *ngFor="let filter of filters"
-      type="button"
-      [class.active]="filter === activeFilter()"
-      (click)="setFilter(filter)"
-    >
-      {{ filter }}
-    </button>
+    <div class="filters-scroll">
+      @for (filter of filters; track filter) {
+        <button
+          type="button"
+          class="filter-btn"
+          [class.active]="filter === activeFilter()"
+          (click)="setFilter(filter)"
+        >
+          @switch (filter) {
+            @case ('Angular') { <i class="fab fa-angular"></i> }
+            @case ('JavaScript') { <i class="fab fa-js"></i> }
+            @case ('TypeScript') { <i class="fas fa-code"></i> }
+            @case ('HTML') { <i class="fab fa-html5"></i> }
+            @case ('CSS') { <i class="fab fa-css3-alt"></i> }
+          }
+          {{ filter }}
+        </button>
+      }
+    </div>
   </div>
 
-  <div class="projects__grid">
-    <article class="project-card" *ngFor="let project of filteredProjects">
-      <div class="project-card__body">
-        <h2>{{ project.title }}</h2>
-        <p>{{ project.description }}</p>
-        <div class="project-stack">
-          <span *ngFor="let tech of project.stack">{{ tech }}</span>
-        </div>
+  <!-- État de chargement -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner">
+        <i class="fas fa-spinner fa-spin"></i>
       </div>
-      <div class="project-card__footer">
-        <a class="case-study" href="#">Voir le case study</a>
-      </div>
-    </article>
-  </div>
+      <p>Chargement de vos projets GitHub...</p>
+    </div>
+  }
+
+  <!-- Message d'erreur -->
+  @if (error()) {
+    <div class="error-state">
+      <i class="fas fa-exclamation-triangle"></i>
+      <p>{{ error() }}</p>
+      <button (click)="loadProjects()" class="retry-btn">
+        <i class="fas fa-sync-alt"></i> Réessayer
+      </button>
+    </div>
+  }
+
+  <!-- Grille des projets -->
+  @if (!loading() && !error()) {
+    <div class="projects__grid">
+      @for (project of filteredProjects; track project.id) {
+        <article class="project-card" [class.featured]="project.featured">
+          @if (project.featured) {
+            <div class="featured-badge">
+              <i class="fas fa-star"></i> Projet en vedette
+            </div>
+          }
+          
+          <div class="project-card__header">
+            <div class="project-title">
+              <h2>
+                <a [href]="project.html_url" target="_blank" rel="noopener noreferrer" class="project-link">
+                  <i class="fas fa-code-branch"></i> {{ project.name }}
+                </a>
+              </h2>
+              <span class="project-language" [style.background]="getLanguageColor(project.language)">
+                <i class="fas fa-circle"></i> {{ project.language || 'Autre' }}
+              </span>
+            </div>
+            
+            <a [href]="project.html_url" target="_blank" class="github-link" title="Voir sur GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+
+          <div class="project-card__body">
+            <p class="project-description">
+              <i class="fas fa-info-circle"></i> {{ project.description || 'Aucune description disponible pour ce projet.' }}
+            </p>
+            
+            <div class="project-meta">
+              <span class="meta-item" title="Dernière mise à jour">
+                <i class="far fa-clock"></i> {{ getLastUpdated(project.updated_at) }}
+              </span>
+              <span class="meta-item" title="Date de création">
+                <i class="far fa-calendar-plus"></i> {{ getFormattedDate(project.created_at) }}
+              </span>
+            </div>
+
+            @if (project.topics && project.topics.length) {
+              <div class="project-topics">
+                <span class="topics-label">
+                  <i class="fas fa-tags"></i> Technologies :
+                </span>
+                <div class="topics-list">
+                  @for (topic of project.topics.slice(0, 5); track topic) {
+                    <span class="topic-badge">{{ topic }}</span>
+                  }
+                  @if (project.topics.length > 5) {
+                    <span class="topic-more" title="Voir plus de technologies">
+                      +{{ project.topics.length - 5 }}
+                    </span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          
+          <div class="project-card__footer">
+            <div class="project-links">
+              @if (project.homepage) {
+                <a [href]="project.homepage" target="_blank" class="btn btn-primary" title="Voir le projet en ligne">
+                  <i class="fas fa-external-link-alt"></i> Voir le projet
+                </a>
+              }
+              <a [href]="project.html_url" target="_blank" class="btn btn-ghost" title="Voir le code source">
+                <i class="fab fa-github"></i> Code source
+              </a>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+
+  <!-- Aucun résultat -->
+  @if (!loading() && !error() && filteredProjects.length === 0) {
+    <div class="no-results">
+      <i class="far fa-folder-open"></i>
+      <p>Aucun projet trouvé pour cette catégorie.</p>
+      <button (click)="activeFilter.set('Tous')" class="btn btn-ghost">
+        <i class="fas fa-undo"></i> Réinitialiser les filtres
+      </button>
+    </div>
+  }
 </section>

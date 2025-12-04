@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GithubService, GithubUser, GithubRepo } from '../../services/github';
-import { forkJoin } from 'rxjs';
-
+import { GithubService } from '../../services/github.service';
+import { GithubUser, GithubRepo } from '../../services/github.models';
+import { Subject, takeUntil } from 'rxjs';
+  
 @Component({
   selector: 'app-github-stats',
   standalone: true,
@@ -10,7 +11,8 @@ import { forkJoin } from 'rxjs';
   templateUrl: './github-stats.html',
   styleUrl: './github-stats.css',
 })
-export class GithubStats implements OnInit {
+export class GithubStats implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   user: GithubUser | null = null;
   hasError = false;
   repos: GithubRepo[] = [];
@@ -27,40 +29,73 @@ export class GithubStats implements OnInit {
   }
 
   loadGithubStats(username: string): void {
+    if (!username?.trim()) {
+      this.handleError(new Error('Le nom d\'utilisateur GitHub est requis'));
+      return;
+    }
+
     this.isLoading = true;
     this.error = null;
     this.hasError = false;
 
-    this.githubService.getUserStats(username).subscribe({
-      next: (stats) => {
-        if (!stats.user) {
-          this.hasError = true;
-          this.error = 'Impossible de charger les informations du profil GitHub.';
-        } else if (stats.repos.length === 0) {
-          this.hasError = true;
-          this.error = 'Aucun dépôt public trouvé pour cet utilisateur.';
-        } else {
-          this.user = stats.user;
-          this.repos = stats.repos;
-          this.topLanguages = stats.topLanguages;
-          this.totalStars = stats.totalStars;
-          this.totalForks = stats.totalForks;
-        }
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des stats GitHub:', err);
-        this.hasError = true;
-        this.error = 'Erreur lors de la connexion à GitHub. Veuillez vérifier votre connexion ou réessayer plus tard.';
-        this.isLoading = false;
-      }
-    });
+    this.githubService.getUserStats(username)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (stats) => this.handleStatsSuccess(stats),
+        error: (err) => this.handleError(err)
+      });
+  }
+
+  private handleStatsSuccess(stats: any) {
+    if (!stats?.user) {
+      throw new Error('Aucune donnée utilisateur disponible');
+    }
+
+    this.user = stats.user;
+    this.repos = stats.repos || [];
+    this.topLanguages = stats.topLanguages || {};
+    this.totalStars = stats.totalStars || 0;
+    this.totalForks = stats.totalForks || 0;
+    this.isLoading = false;
+  }
+
+  private handleError(error: any) {
+    console.error('Erreur GitHub:', error);
+    this.hasError = true;
+    this.isLoading = false;
+    
+    if (error?.message?.includes('rate limit')) {
+      this.error = 'Limite de requêtes API atteinte. Veuillez réessayer plus tard.';
+    } else if (error?.status === 404) {
+      this.error = 'Utilisateur non trouvé. Vérifiez le nom d\'utilisateur.';
+    } else if (error?.message) {
+      this.error = error.message;
+    } else {
+      this.error = 'Erreur lors de la récupération des données GitHub. Veuillez réessayer.';
+    }
   }
 
   getTopLanguages(): { name: string; count: number }[] {
     return Object.entries(this.topLanguages)
-      .map(([name, count]) => ({ name, count }))
+      .map(([name, count]) => ({ name, count: count as number }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5); // Afficher les 5 langages les plus utilisés
   }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
+
+export default GithubStats;

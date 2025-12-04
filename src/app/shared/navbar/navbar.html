@@ -1,34 +1,110 @@
-<nav class="navbar">
-  <a class="brand" routerLink="/">BOUBACAR CHERIF DIALLO</a>
-  
-  <!-- Bouton du menu mobile -->
-  <button class="menu-btn" (click)="toggleMenu()" aria-label="Menu">
-    <span class="menu-icon">
-      <span></span>
-      <span></span>
-      <span></span>
-    </span>
-  </button>
+<nav class="navbar" role="navigation" aria-label="Menu principal" [class.menu-open]="isMenuOpen" [@fadeInOut]>
+  <!-- Préchargement des polaces critiques -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+  <div class="nav-container">
+    <a class="brand" routerLink="/" aria-label="Accueil - Retour à la page d'accueil">
+      <span class="brand-text">BOUBACAR</span>
+      <span class="brand-text highlight" aria-hidden="true">CHERIF</span>
+      <span class="sr-only">DIALLO</span>
+    </a>
+    
+    <button 
+      class="menu-btn" 
+      (click)="toggleMenu()" 
+      [attr.aria-expanded]="isMenuOpen"
+      [attr.aria-controls]="'main-navigation'"
+      [attr.aria-label]="isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'"
+      [class.active]="isMenuOpen">
+      <span class="menu-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+      </span>
+      <span class="sr-only">{{ isMenuOpen ? 'Fermer' : 'Ouvrir' }} le menu</span>
+    </button>
 
-  <!-- Navigation -->
-  <div class="nav-links" [class.active]="isMenuOpen">
-    <a routerLink="/about" routerLinkActive="router-link-active" (click)="closeMenu()">
-      <i class="fas fa-user-circle"></i> À propos
-    </a>
-    <a routerLink="/projects" routerLinkActive="router-link-active" (click)="closeMenu()">
-      <i class="fas fa-folder-open"></i> Projets
-    </a>
-    <a routerLink="/skills" routerLinkActive="router-link-active" (click)="closeMenu()">
-      <i class="fas fa-code"></i> Compétences
-    </a>
-    <a routerLink="/experience" routerLinkActive="router-link-active" (click)="closeMenu()">
-      <i class="fas fa-briefcase"></i> Expérience
-    </a>
-    <a routerLink="/contact" routerLinkActive="router-link-active" (click)="closeMenu()">
-      <i class="fas fa-envelope"></i> Contact
-    </a>
-    <a routerLink="/github" routerLinkActive="router-link-active" (click)="closeMenu()">
-      <i class="fab fa-github"></i> GitHub
-    </a>
+    <div 
+      id="main-navigation"
+      class="nav-links" 
+      [class.active]="isMenuOpen"
+      [attr.aria-hidden]="!isMenuOpen"
+      [attr.inert]="!isMenuOpen ? '' : null"
+      [@fadeInOut]="isMenuOpen ? 'in' : 'out'">
+      <div class="nav-group">
+        <!-- Lien Accueil -->
+        <a 
+          routerLink="/" 
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}"
+          (click)="onNavLinkClick()"
+          role="menuitem"
+          [class.active]="isActive('/')"
+          [attr.aria-current]="isActive('/') ? 'page' : null">
+          <i class="fas fa-home" aria-hidden="true"></i>
+          <span>Accueil</span>
+        </a>
+        
+        <!-- Lien À propos -->
+        <a 
+          routerLink="/about" 
+          routerLinkActive="active"
+          (click)="onNavLinkClick()"
+          role="menuitem"
+          [class.active]="isActive('/about')"
+          [attr.aria-current]="isActive('/about') ? 'page' : null">
+          <i class="fas fa-user" aria-hidden="true"></i>
+          <span>À propos</span>
+        </a>
+        
+        <!-- Lien Projets -->
+        <a 
+          routerLink="/projects" 
+          routerLinkActive="active"
+          (click)="onNavLinkClick()"
+          role="menuitem"
+          [class.active]="isActive('/projects')"
+          [attr.aria-current]="isActive('/projects') ? 'page' : null">
+          <i class="fas fa-code-branch" aria-hidden="true"></i>
+          <span>Projets</span>
+        </a>
+      </div>
+      <div class="nav-group">
+        <!-- Lien Expérience -->
+        <a 
+          routerLink="/experience" 
+          routerLinkActive="active"
+          (click)="onNavLinkClick()"
+          role="menuitem"
+          [class.active]="isActive('/experience')"
+          [attr.aria-current]="isActive('/experience') ? 'page' : null">
+          <i class="fas fa-briefcase" aria-hidden="true"></i>
+          <span>Expérience</span>
+        </a>
+        
+        <!-- Lien Contact -->
+        <a 
+          routerLink="/contact" 
+          routerLinkActive="active"
+          (click)="onNavLinkClick()"
+          role="menuitem"
+          [class.active]="isActive('/contact')"
+          [attr.aria-current]="isActive('/contact') ? 'page' : null">
+          <i class="fas fa-envelope" aria-hidden="true"></i>
+          <span>Contact</span>
+        </a>
+        <!-- Lien GitHub (externe) -->
+        <a 
+          routerLink="/github-stats" 
+           routerLinkActive="active"
+          (click)="onNavLinkClick()"
+          role="menuitem"
+          class="nav-link"
+          [class.active]="isActive('/github-stats')"
+          [attr.aria-current]="isActive('/github-stats') ? 'page' : null">
+          <i class="fab fa-github" aria-hidden="true"></i>
+          <span>GitHub Stats</span>
+        </a>
+      </div>
+    </div>
   </div>
 </nav>

@@ -1,42 +1,18 @@
 <section class="about">
-  <div class="about__intro">
+  <div class="about__header">
     <p class="eyebrow">À propos</p>
     <h1>{{ intro.title }}</h1>
-    <p class="description">{{ intro.description }}</p>
-    <blockquote>{{ intro.quote }}</blockquote>
   </div>
-
-  <div class="about__stats">
-    <article class="stat-card" *ngFor="let item of highlights">
-      <span class="value">{{ item.value }}</span>
-      <span class="label">{{ item.label }}</span>
-    </article>
-  </div>
-
-  <div class="about__skills">
-    <h2>Mes compétences techniques</h2>
-    <div class="skill-categories">
-      <div *ngFor="let category of skillCategories; trackBy: trackByIndex" class="skill-category">
-        <h3>{{ category.name }}</h3>
-        <ul>
-          <li *ngFor="let skill of category.skills; trackBy: trackBySkill">
-            <i [class]="skill | skillIcon"></i>
-            {{ skill }}
-          </li>
-        </ul>
-      </div>
+  
+  <div class="about__content">
+    <div class="about__intro">
+      <p class="description">{{ intro.description }}</p>
+      <blockquote>{{ intro.quote }}</blockquote>
+    </div>
+    
+    <div class="about__photo">
+     <img src="images/1760730831689.jpg" alt="Votre photo de profil" class="profile-photo">
     </div>
   </div>
 
-  <div class="about__timeline">
-    <h2>Mon parcours</h2>
-    <div class="timeline">
-      <article class="timeline-item" *ngFor="let step of journey">
-        <span class="timeline-year">{{ step.year }}</span>
-        <h3>{{ step.title }}</h3>
-        <p class="company">{{ step.company }}</p>
-        <p class="timeline-desc">{{ step.description }}</p>
-      </article>
-    </div>
-  </div>
 </section>

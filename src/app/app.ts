@@ -11,5 +11,5 @@ import { FooterComponent } from './shared/footer/footer.component';
   styleUrls: ['./app.css']
 })
 export class App {
-  title = 'mon-portfolio';
+  title = 'BOUBACAR CHERIF';
 }
